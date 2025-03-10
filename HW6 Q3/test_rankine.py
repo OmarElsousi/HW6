@@ -1,4 +1,4 @@
-from Rankine_stem import rankine
+from Rankine_stem import Rankine
 
 def main():
     """
@@ -14,11 +14,11 @@ def main():
     print("Rankine Cycle i: Saturated vapor entering the turbine")
     # Instantiate the first Rankine object with p_low=8 kPa, p_high=8000 kPa, and t_high=None.
     # Setting t_high=None indicates that the turbine inlet is saturated vapor (x = 1).
-    rankine_i = rankine(p_low=8, p_high=8000, t_high=None, name='Rankine Cycle i')
+    Rankine_i = Rankine(p_low=8, p_high=8000, t_high=None, name='Rankine Cycle i')
     # Calculate the efficiency of the cycle using the calc_efficiency() method.
-    efficiency_i = rankine_i.calc_efficiency()
+    efficiency_i = Rankine_i.calc_efficiency()
     # Print a detailed report of the cycle's properties using the print_summary() method.
-    rankine_i.print_summary()
+    Rankine_i.print_summary()
     print(f"Efficiency of Rankine Cycle i: {efficiency_i:.2f}%\n")
 
     # Rankine Cycle ii: Superheated steam entering the turbine
@@ -29,11 +29,11 @@ def main():
     T_high = 1.7 * T_sat  # Superheated temperature
     # Instantiate the second Rankine object with p_low=8 kPa, p_high=8000 kPa, and t_high=T_high.
     # Setting t_high=T_high indicates that the turbine inlet is superheated steam.
-    rankine_ii = rankine(p_low=8, p_high=8000, t_high=T_high, name='Rankine Cycle ii')
+    Rankine_ii = Rankine(p_low=8, p_high=8000, t_high=T_high, name='Rankine Cycle ii')
     # Calculate the efficiency of the cycle using the calc_efficiency() method.
-    efficiency_ii = rankine_ii.calc_efficiency()
+    efficiency_ii = Rankine_ii.calc_efficiency()
     # Print a detailed report of the cycle's properties using the print_summary() method.
-    rankine_ii.print_summary()
+    Rankine_ii.print_summary()
     print(f"Efficiency of Rankine Cycle ii: {efficiency_ii:.2f}%\n")
 
 if __name__ == "__main__":
