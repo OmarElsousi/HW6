@@ -1,29 +1,34 @@
-#region classes
-class Resistor():
-    #region constructor
+class Resistor:
+    """
+    A class representing an electrical resistor.
+
+    Attributes:
+    - Resistance (float): The resistance value in ohms.
+    - Current (float): The current flowing through the resistor in amps.
+    - Name (str): The name of the resistor, typically based on connected node names.
+    - V (float): The voltage drop across the resistor.
+    """
+
     def __init__(self, R=1.0, i=0.0, name='ab'):
         """
-        Defines a resistor to have a self.Resistance, self.Current, and self.Name
-        :param R: resistance in Ohm (float)
-        :param i: current in amps (float)
-        :param name: name of resistor by alphabetically ordered pair of node names
-        """
-        #region attributes
-        self.Resistance = R
-        self.Current = i
-        # Initialize voltage drop; you can also set self.V = 0 if you prefer
-        self.V = self.DeltaV()
-        self.Name = name
-        #endregion
-    #endregion
+        Initializes a resistor with a given resistance, current, and name.
 
-    #region methods
+        Parameters:
+        - R (float, optional): Resistance in ohms (default is 1.0).
+        - i (float, optional): Current in amps (default is 0.0).
+        - name (str, optional): Name of the resistor (default is 'ab').
+        """
+        self.Resistance = R  # Stores the resistance value
+        self.Current = i  # Stores the current value
+        self.Name = name  # Stores the resistor's name
+        self.V = self.DeltaV()  # Computes initial voltage drop
+
     def DeltaV(self):
         """
-        Calculates voltage change across resistor.
-        :return: voltage drop across resistor as a float
+        Calculates and updates the voltage drop across the resistor using Ohm's Law (V = IR).
+
+        Returns:
+        - float: The voltage drop across the resistor.
         """
-        self.V = self.Current * self.Resistance
+        self.V = self.Current * self.Resistance  # Ohm's Law: V = IR
         return self.V
-    #endregion
-#endregion

@@ -1,12 +1,16 @@
-#region class definitions
-class Loop():
-    #region constructor
+class Loop:
+    """
+    A class representing a loop in an electrical circuit.
+
+    Loops are formed by connecting nodes in a closed path.
+    This class stores the node names that make up the loop.
+    """
+
     def __init__(self):
         """
-        Defines a loop as a list of node names.
+        Initializes an empty loop.
+
+        Attributes:
+        - self.Nodes (list): A list to store node names forming the loop.
         """
-        #region attributes
-        self.Nodes = []
-        #endregion
-    #endregion
-#endregion
+        self.Nodes = []  # List to store node names that form a loop

@@ -54,21 +54,23 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python.Fluid.executor": "Run",
-    "Python.HW6_1.executor": "Run",
-    "Python.HW6_2.executor": "Run",
-    "Python.Rankine_stem.executor": "Run",
-    "Python.ResistorNetwork.executor": "Run",
-    "Python.Steam_stem.executor": "Run",
-    "Python.main.executor": "Run",
-    "Python.test_rankine.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "master",
-    "last_opened_file_path": "C:/Users/The Sous PC/HW6/HW6 Q3"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.Fluid.executor&quot;: &quot;Run&quot;,
+    &quot;Python.HW6_1.executor&quot;: &quot;Run&quot;,
+    &quot;Python.HW6_2.executor&quot;: &quot;Run&quot;,
+    &quot;Python.Loop.executor&quot;: &quot;Run&quot;,
+    &quot;Python.Pipe.executor&quot;: &quot;Run&quot;,
+    &quot;Python.Rankine_stem.executor&quot;: &quot;Run&quot;,
+    &quot;Python.ResistorNetwork.executor&quot;: &quot;Run&quot;,
+    &quot;Python.Steam_stem.executor&quot;: &quot;Run&quot;,
+    &quot;Python.main.executor&quot;: &quot;Run&quot;,
+    &quot;Python.test_rankine.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/The Sous PC/HW6/HW6 Q3&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\The Sous PC\HW6\HW6 Q3" />
@@ -125,6 +127,10 @@
           <url>file://$PROJECT_DIR$/main.py</url>
           <line>8</line>
           <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/HW6 Q2/Pipe.py</url>
+          <option name="timeStamp" value="2" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

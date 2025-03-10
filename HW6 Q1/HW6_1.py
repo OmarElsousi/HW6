@@ -1,29 +1,38 @@
-#region imports
+# region imports
 from ResistorNetwork import ResistorNetwork, ResistorNetwork_2
-#endregion
+
+
+# endregion
 
 # region Function Definitions
 def main():
     """
-    This program solves for the unknown currents in two circuits:
-    1) The original "ResistorNetwork.txt"
-    2) The updated "ResistorNetwork_2.txt" with extra resistor(s) and loop(s).
+    This script analyzes two electrical resistor networks by solving for unknown currents.
+
+    The program does the following:
+    1. Reads and analyzes the first circuit from "ResistorNetwork.txt".
+    2. Reads and analyzes the second (modified) circuit from "ResistorNetwork_2.txt".
+
+    It uses the `ResistorNetwork` and `ResistorNetwork_2` classes to build and analyze the networks.
     """
+
     print("Network 1:")
-    # Instantiate a ResistorNetwork object
+    # Create an instance of the ResistorNetwork class to handle the first circuit
     Net = ResistorNetwork()
-    # Build the resistor network from a text file
+    # Load the resistor network from a text file
     Net.BuildNetworkFromFile("ResistorNetwork.txt")
-    # Analyze the first circuit
+    # Analyze the circuit to compute the unknown currents
     IVals = Net.AnalyzeCircuit()
 
     print("\nNetwork 2:")
-    # Instantiate a ResistorNetwork_2 object
+    # Create an instance of the modified ResistorNetwork_2 class for the second circuit
     Net_2 = ResistorNetwork_2()
-    # Build from the second text file
+    # Load the second circuit from another file
     Net_2.BuildNetworkFromFile("ResistorNetwork_2.txt")
-    # Analyze the second circuit
+    # Analyze the second circuit to compute the unknown currents
     IVals_2 = Net_2.AnalyzeCircuit()
 
-if __name__=="__main__":
+
+# Ensure the script runs only when executed directly (not when imported)
+if __name__ == "__main__":
     main()

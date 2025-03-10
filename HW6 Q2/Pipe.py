@@ -1,144 +1,142 @@
-#region imports
 import math
 import numpy as np
 import random as rnd
 from scipy.optimize import fsolve
 from Fluid import Fluid
-#endregion
 
-# region class definitions
-class Pipe():
-    #region constructor
+
+class Pipe:
+    """
+    Represents a pipe in a network with properties such as length, diameter, roughness,
+    and flow characteristics.
+    """
+
     def __init__(self, Start='A', End='B', L=100, D=200, r=0.00025, fluid=Fluid()):
-        '''
-        Defines a generic pipe with orientation from lowest letter to highest, alphabetically.
-        :param Start: the start node (string)
-        :param End: the end node (string)
-        :param L: the pipe length in m (float)
-        :param D: the pipe diameter in mm (float)
-        :param r: the pipe roughness in m  (float)
-        :param fluid: a Fluid object (typically water)
-        '''
-        #region attributes
-        # from arguments given in constructor
-        self.startNode = min(Start, End)   # use the lowest letter for startNode
-        self.endNode = max(Start, End)     # use the highest letter for endNode
-        self.length = L
-        self.r = r
-        self.fluid = fluid
+        """
+        Initializes a Pipe object with given parameters.
 
-        # other calculated properties
-        self.d = D/1000.0               # diameter in m
-        self.relrough = self.r/self.d   # relative roughness
-        self.A = math.pi/4.0 * self.d**2  # cross-sectional area, m^2
-        self.Q = 10                     # initial guess, in L/s
-        self.vel = self.V()            # compute velocity
-        self.reynolds = self.Re()      # compute Reynolds number
-        #endregion
-    #endregion
+        :param Start: Name of the starting node (string).
+        :param End: Name of the ending node (string).
+        :param L: Pipe length in meters (float).
+        :param D: Pipe diameter in millimeters (float).
+        :param r: Pipe roughness in meters (float).
+        :param fluid: A Fluid object representing the fluid inside the pipe.
+        """
+        self.startNode = min(Start, End)  # Ensure startNode is alphabetically lower
+        self.endNode = max(Start, End)  # Ensure endNode is alphabetically higher
+        self.length = L  # Store pipe length
+        self.r = r  # Store pipe roughness
+        self.fluid = fluid  # Store fluid properties
 
-    #region methods
+        # Compute derived properties
+        self.d = D / 1000.0  # Convert diameter to meters
+        self.relrough = self.r / self.d  # Compute relative roughness
+        self.A = math.pi / 4.0 * self.d ** 2  # Compute cross-sectional area (m²)
+        self.Q = 10  # Initial guess for flow rate (L/s)
+        self.vel = self.V()  # Compute velocity (m/s)
+        self.reynolds = self.Re()  # Compute Reynolds number
+
     def V(self):
-        '''
-        Calculate average velocity in the pipe for volumetric flow self.Q
-        :return: the average velocity in m/s
-        '''
-        # FILLED IN MISSING CODE
-        # Q is in L/s => convert to m^3/s by multiplying by 0.001
-        self.vel = (self.Q * 0.001) / self.A
+        """
+        Calculates the average velocity in the pipe based on the volumetric flow rate.
+
+        :return: The average velocity in m/s.
+        """
+        self.vel = (self.Q * 0.001) / self.A  # Convert L/s to m³/s and compute velocity
         return self.vel
 
     def Re(self):
-        '''
-        Calculate the Reynolds number under current conditions.
-        :return: Reynolds number (dimensionless)
-        '''
-        # FILLED IN MISSING CODE
+        """
+        Computes the Reynolds number based on the pipe's current conditions.
+
+        :return: The Reynolds number (dimensionless).
+        """
         self.reynolds = (self.fluid.rho * self.V() * self.d) / self.fluid.mu
         return self.reynolds
 
     def FrictionFactor(self):
         """
-        Calculates the Darcy friction factor for a pipe, considering laminar vs turbulent flow,
-        and a transitional region in between.
+        Computes the Darcy-Weisbach friction factor depending on the flow regime.
+        Uses the Colebrook equation for turbulent flow and an approximation for laminar flow.
+
+        :return: The friction factor (dimensionless).
         """
         Re = self.Re()
         rr = self.relrough
 
-        # For turbulent flow: use Colebrook eq with fsolve
         def CB():
-            cb = lambda f: 1/(f**0.5) + 2.0 * np.log10(rr/3.7 + 2.51/(Re * f**0.5))
+            cb = lambda f: 1 / (f ** 0.5) + 2.0 * np.log10(rr / 3.7 + 2.51 / (Re * f ** 0.5))
             result = fsolve(cb, 0.01)
             return result[0]
 
-        # For laminar flow
         def lam():
             return 64 / Re
 
-        # Classification
-        if Re >= 4000:     # turbulent
-            return CB()
-        elif Re <= 2000:   # laminar
-            return lam()
+        if Re >= 4000:
+            return CB()  # Turbulent flow
+        elif Re <= 2000:
+            return lam()  # Laminar flow
         else:
-            # transitional => a blend (with random variation)
+            # Transitional flow: Interpolate between laminar and turbulent
             CBff = CB()
             Lamff = lam()
-            # linear interpolation
-            mean = Lamff + ((Re - 2000)/(4000 - 2000)) * (CBff - Lamff)
+            mean = Lamff + ((Re - 2000) / (4000 - 2000)) * (CBff - Lamff)
             sig = 0.2 * mean
             return rnd.normalvariate(mean, sig)
 
     def frictionHeadLoss(self):
-        '''
-        Use the Darcy–Weisbach equation to find the head loss (in m of fluid).
-         h_f = f * (L / D) * (v^2 / (2*g))
-        '''
-        g = 9.81  # m/s^2
+        """
+        Calculates head loss in meters using the Darcy-Weisbach equation.
+
+        :return: Head loss in meters of fluid.
+        """
+        g = 9.81  # Acceleration due to gravity (m/s²)
         ff = self.FrictionFactor()
-        # FILLED IN MISSING CODE
-        hl = ff * (self.length / self.d) * (self.vel**2) / (2 * g)
+        hl = ff * (self.length / self.d) * (self.vel ** 2) / (2 * g)
         return hl
 
     def getFlowHeadLoss(self, s):
-        '''
-        Calculate the signed head loss for the pipe if we are "traversing" in a loop.
-        If flow is with the loop traversal direction, it's positive. Opposite => negative.
-        :param s: the node I'm starting with in a loop traversal
-        :return: the signed headloss in m
-        '''
-        # if s == startNode, we are traversing from start->end, otherwise end->start
+        """
+        Calculates the signed head loss in the pipe when traversing a loop.
+
+        :param s: Starting node for traversal.
+        :return: Signed head loss in meters.
+        """
         nTraverse = 1 if s == self.startNode else -1
-        # if Q is positive in the "start->end" sense, nFlow=1, else -1
         nFlow = 1 if self.Q >= 0 else -1
         return nTraverse * nFlow * self.frictionHeadLoss()
 
     def Name(self):
-        '''
-        Gets the pipe name as "a-b".
-        :return: string
-        '''
-        return self.startNode + '-' + self.endNode
+        """
+        Returns the pipe name in the format 'startNode-endNode'.
+
+        :return: Pipe name as a string.
+        """
+        return f"{self.startNode}-{self.endNode}"
 
     def oContainsNode(self, node):
-        '''
-        Does the pipe connect to the specified node?
-        '''
-        return (self.startNode == node or self.endNode == node)
+        """
+        Checks if the pipe is connected to a given node.
+
+        :param node: Node name (string).
+        :return: True if the node is part of the pipe, False otherwise.
+        """
+        return self.startNode == node or self.endNode == node
 
     def printPipeFlowRate(self):
-        print('The flow in segment {} is {:0.2f} L/s'.format(self.Name(), self.Q))
+        """
+        Prints the flow rate in the pipe.
+        """
+        print(f"The flow in segment {self.Name()} is {self.Q:.2f} L/s")
 
     def getFlowIntoNode(self, n):
-        '''
-        determines the flow rate into node n
-        :param n: node's name
-        :return: +Q if flowing into the node, -Q if flowing out
-        '''
+        """
+        Determines the flow rate into a specific node.
+
+        :param n: The node name.
+        :return: Positive flow if into the node, negative if out of the node.
+        """
         if n == self.startNode:
-            # node is the start => if Q is positive start->end, flow is leaving 'start', so negative
-            return -self.Q
+            return -self.Q  # Flow is leaving the node
         else:
-            return self.Q
-    #endregion
-#endregion
+            return self.Q  # Flow is entering the node
